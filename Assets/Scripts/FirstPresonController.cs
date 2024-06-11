@@ -8,6 +8,8 @@ public class FirstPresonController : MonoBehaviour
     public bool IsLookable { get; set; } = true;
     public bool IsMovable { get; set; } = true;
 
+    private FIrstPresonMovement movementComponent;
+
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float gravity = -9.81f;
@@ -31,6 +33,8 @@ public class FirstPresonController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        movementComponent = GetComponent<FIrstPresonMovement>();
     }
 
     private void Update()
@@ -42,26 +46,10 @@ public class FirstPresonController : MonoBehaviour
 
         if (IsMovable)
         {
-            Move();
+            currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            var movement = movementComponent.Move(currentInput, characterController, Time.deltaTime);
+            characterController.Move(movement);
         }
-    }
-
-    private void Move()
-    {
-        currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        Vector3 horizontalMovement = transform.TransformDirection(new Vector3(currentInput.x, 0, currentInput.y));
-        horizontalMovement *= walkSpeed;
-
-        Vector3 verticalMovement = Vector3.up * movement.y;
-        if (!characterController.isGrounded)
-        {
-            verticalMovement.y += gravity * Time.deltaTime;
-        }
-        movement = horizontalMovement + verticalMovement;
-
-        isGrounded = characterController.isGrounded;
-
-        characterController.Move(movement * Time.deltaTime);
     }
 
     private void Look()
@@ -77,14 +65,5 @@ public class FirstPresonController : MonoBehaviour
         cameraEulerX = 180 < cameraEulerX ? cameraEulerX - 360 : cameraEulerX;
         cameraEulerX = Mathf.Clamp(cameraEulerX, -upperLookLimit, lowerLookLimit);
         playerCamera.transform.localRotation = Quaternion.Euler(cameraEulerX, 0, 0);
-        /*
-        euler = playerCamera.transform.localEulerAngles;
-        euler.x -= delta.y * lookSpeed;
-        euler.x = euler.x > 180 ? euler.x - 360 : euler.x;
-        euler.x = Mathf.Clamp(euler.x, -upperLookLimit, lowerLookLimit);
-        playerCamera.transform.localEulerAngles = euler;
-        */
     }
-
-
 }

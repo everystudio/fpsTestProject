@@ -123,6 +123,9 @@ Assets/Ludiq/Ludiq.PeekCore.meta
 Assets/Ludiq.Generated/*
 Assets/Ludiq.Generated.meta
 
+Assets/Stylized Terrain Textures/*
+Assets/Stylized Terrain Textures.meta
+
 # 以下Flask用
 # プロジェクトの仮想環境
 server/myenv/

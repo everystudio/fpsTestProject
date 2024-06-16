@@ -18,7 +18,6 @@ public class FirstPersonController : MonoBehaviour
     private Camera playerCamera;
     private CharacterController characterController;
 
-    [SerializeField] private Vector3 movement = Vector3.forward;
     private Vector2 currentInput = Vector2.zero;
 
     [SerializeField] private bool isGrounded = false;
@@ -43,8 +42,11 @@ public class FirstPersonController : MonoBehaviour
         if (IsMovable)
         {
             currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            var movement = movementComponent.Move(currentInput, characterController, Time.deltaTime, Input.GetKey(KeyCode.LeftShift));
-            characterController.Move(movement);
+            movementComponent?.Move(
+                currentInput, characterController, Time.deltaTime,
+                Input.GetKeyDown(KeyCode.Space),
+                Input.GetKey(KeyCode.LeftShift));
+            isGrounded = characterController.isGrounded;
         }
     }
 

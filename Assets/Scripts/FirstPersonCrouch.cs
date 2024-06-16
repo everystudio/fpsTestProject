@@ -8,7 +8,7 @@ public class FirstPersonCrouch : MonoBehaviour
     public bool IsCrouching => isCrouching;
     private bool isCrouching = false;
 
-    private Transform playerCamera;
+    private Transform cameraRootTransform;
     private float standingCameraHeight;
     private float crouchingCameraHeight;
     private float standingHeight = 2.0f;
@@ -16,9 +16,9 @@ public class FirstPersonCrouch : MonoBehaviour
     private Vector3 standingCenter;
     private Vector3 crouchingCenter;
 
-    public void Initialize(Transform cameraHeight, float standingCameraHeight, float crouchingCameraHeight, float standingHeight, float crouchingHeight, Vector3 standingCenter, Vector3 crouchingCenter)
+    public void Initialize(Transform cameraRootTransform, float standingCameraHeight, float crouchingCameraHeight, float standingHeight, float crouchingHeight, Vector3 standingCenter, Vector3 crouchingCenter)
     {
-        this.playerCamera = cameraHeight;
+        this.cameraRootTransform = cameraRootTransform;
         this.standingCameraHeight = standingCameraHeight;
         this.crouchingCameraHeight = crouchingCameraHeight;
         this.standingHeight = standingHeight;
@@ -45,14 +45,14 @@ public class FirstPersonCrouch : MonoBehaviour
         float targetHeight = isCrouching ? crouchingHeight : standingHeight;
         Vector3 currentCenter = characterController.center;
         Vector3 targetCenter = isCrouching ? crouchingCenter : standingCenter;
-        float currentCameraHeight = playerCamera.localPosition.y;
+        float currentCameraHeight = cameraRootTransform.localPosition.y;
         float targetCameraHeight = isCrouching ? crouchingCameraHeight : standingCameraHeight;
 
         float time = 0;
         while (time < duration)
         {
             float cameraHeight = Mathf.Lerp(currentCameraHeight, targetCameraHeight, time / duration);
-            playerCamera.localPosition = new Vector3(playerCamera.localPosition.x, cameraHeight, playerCamera.localPosition.z);
+            cameraRootTransform.localPosition = new Vector3(cameraRootTransform.localPosition.x, cameraHeight, cameraRootTransform.localPosition.z);
 
             characterController.height = Mathf.Lerp(currentHeight, targetHeight, time / duration);
             characterController.center = Vector3.Lerp(currentCenter, targetCenter, time / duration);

@@ -10,18 +10,45 @@ public class FirstPersonController : MonoBehaviour
 
     private FirstPersonMovement movementComponent;
     private FirstPersonCrouch crouchComponent;
+    private FirstPersonHeadbob headbobComponent;
 
     [Header("Look")]
     [SerializeField, Range(1, 10)] private float lookSpeed = 2.0f;
     [SerializeField, Range(1, 100)] private float upperLookLimit = 50.0f;
     [SerializeField, Range(1, 100)] private float lowerLookLimit = 50.0f;
 
+    [SerializeField] private Transform cameraRoot;
     private Camera playerCamera;
     private CharacterController characterController;
 
     private Vector2 currentInput = Vector2.zero;
 
+
     [SerializeField] private bool isGrounded = false;
+    public bool IsGrounded => isGrounded;
+
+    public bool IsSprinting
+    {
+        get
+        {
+            if (movementComponent != null)
+            {
+                return movementComponent.IsSprinting;
+            }
+            return false;
+        }
+    }
+    public bool IsCrouching
+    {
+        get
+        {
+            if (crouchComponent != null)
+            {
+                return crouchComponent.IsCrouching;
+            }
+            return false;
+        }
+    }
 
     private void Awake()
     {
@@ -34,9 +61,10 @@ public class FirstPersonController : MonoBehaviour
         if (TryGetComponent(out crouchComponent))
         {
             crouchComponent.Initialize(
-                playerCamera.transform, playerCamera.transform.localPosition.y, 0.5f,
+                cameraRoot, cameraRoot.localPosition.y, 0.5f,
                 characterController.height, 1.0f, characterController.center, new Vector3(0, 0.5f, 0));
         }
+        TryGetComponent(out headbobComponent);
     }
 
     private void Update()
@@ -49,11 +77,13 @@ public class FirstPersonController : MonoBehaviour
         if (IsMovable)
         {
             currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            movementComponent?.Move(
+            Vector3 moveVelocity = movementComponent.Move(
                 currentInput, characterController, Time.deltaTime,
                 Input.GetKeyDown(KeyCode.Space),
                 Input.GetKey(KeyCode.LeftShift));
             isGrounded = characterController.isGrounded;
+            headbobComponent?.Headbob(this, playerCamera.transform, moveVelocity, Time.deltaTime);
+
         }
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -69,10 +99,10 @@ public class FirstPersonController : MonoBehaviour
         euler.y += delta.x * lookSpeed;
         transform.eulerAngles = euler;
 
-        float cameraEulerX = playerCamera.transform.localEulerAngles.x;
+        float cameraEulerX = cameraRoot.localEulerAngles.x;
         cameraEulerX -= delta.y * lookSpeed;
         cameraEulerX = 180 < cameraEulerX ? cameraEulerX - 360 : cameraEulerX;
         cameraEulerX = Mathf.Clamp(cameraEulerX, -upperLookLimit, lowerLookLimit);
-        playerCamera.transform.localRotation = Quaternion.Euler(cameraEulerX, 0, 0);
+        cameraRoot.localRotation = Quaternion.Euler(cameraEulerX, 0, 0);
     }
 }

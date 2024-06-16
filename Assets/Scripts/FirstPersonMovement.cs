@@ -11,6 +11,8 @@ public class FirstPersonMovement : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 3.0f;
 
+    public bool IsSprinting { get; set; } = false;
+
     public Vector3 verticalVelocity = Vector3.zero;
 
     private FirstPersonCrouch crouchComponent;
@@ -22,7 +24,8 @@ public class FirstPersonMovement : MonoBehaviour
 
     public Vector3 Move(Vector2 currentInput, CharacterController characterController, float deltaTime, bool isJump, bool isSprint = false)
     {
-        float movementSpeed = isSprint ? sprintSpeed : walkSpeed;
+        IsSprinting = isSprint;
+        float movementSpeed = IsSprinting ? sprintSpeed : walkSpeed;
         // 座っている場合は上書き
         if (crouchComponent != null && crouchComponent.IsCrouching)
         {

@@ -9,6 +9,7 @@ public class FirstPersonController : MonoBehaviour
     public bool IsMovable { get; set; } = true;
 
     private FirstPersonMovement movementComponent;
+    private FirstPersonCrouch crouchComponent;
 
     [Header("Look")]
     [SerializeField, Range(1, 10)] private float lookSpeed = 2.0f;
@@ -30,6 +31,12 @@ public class FirstPersonController : MonoBehaviour
         Cursor.visible = false;
 
         movementComponent = GetComponent<FirstPersonMovement>();
+        if (TryGetComponent(out crouchComponent))
+        {
+            crouchComponent.Initialize(
+                playerCamera.transform, playerCamera.transform.localPosition.y, 0.5f,
+                characterController.height, 1.0f, characterController.center, new Vector3(0, 0.5f, 0));
+        }
     }
 
     private void Update()
@@ -47,6 +54,10 @@ public class FirstPersonController : MonoBehaviour
                 Input.GetKeyDown(KeyCode.Space),
                 Input.GetKey(KeyCode.LeftShift));
             isGrounded = characterController.isGrounded;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            crouchComponent?.ToggleCrouch(characterController, 0.5f);
         }
     }
 

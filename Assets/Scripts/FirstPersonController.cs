@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class FirstPresonController : MonoBehaviour
+public class FirstPersonController : MonoBehaviour
 {
     public bool IsLookable { get; set; } = true;
     public bool IsMovable { get; set; } = true;
 
-    private FIrstPresonMovement movementComponent;
-
-    [Header("Movement")]
-    [SerializeField] private float walkSpeed = 5.0f;
-    [SerializeField] private float gravity = -9.81f;
+    private FirstPersonMovement movementComponent;
 
     [Header("Look")]
     [SerializeField, Range(1, 10)] private float lookSpeed = 2.0f;
@@ -34,7 +30,7 @@ public class FirstPresonController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        movementComponent = GetComponent<FIrstPresonMovement>();
+        movementComponent = GetComponent<FirstPersonMovement>();
     }
 
     private void Update()
@@ -47,7 +43,7 @@ public class FirstPresonController : MonoBehaviour
         if (IsMovable)
         {
             currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            var movement = movementComponent.Move(currentInput, characterController, Time.deltaTime);
+            var movement = movementComponent.Move(currentInput, characterController, Time.deltaTime, Input.GetKey(KeyCode.LeftShift));
             characterController.Move(movement);
         }
     }

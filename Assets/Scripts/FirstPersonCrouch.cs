@@ -29,17 +29,31 @@ public class FirstPersonCrouch : MonoBehaviour
 
     public async void ToggleCrouch(CharacterController characterController, float duration)
     {
+        if (isCrouching)
+        {
+            Vector3 raycastStart = characterController.transform.position + characterController.center;
+            //Debug.DrawLine(raycastStart, raycastStart + Vector3.up * crouchingHeight, Color.red, 1.0f);
+            if (Physics.Raycast(raycastStart, Vector3.up, out RaycastHit hit, crouchingHeight))
+            {
+                // 上に何かあるので立てない
+                return;
+            }
+        }
         isCrouching = !isCrouching;
 
         float currentHeight = characterController.height;
         float targetHeight = isCrouching ? crouchingHeight : standingHeight;
         Vector3 currentCenter = characterController.center;
         Vector3 targetCenter = isCrouching ? crouchingCenter : standingCenter;
+        float currentCameraHeight = playerCamera.localPosition.y;
+        float targetCameraHeight = isCrouching ? crouchingCameraHeight : standingCameraHeight;
 
         float time = 0;
         while (time < duration)
         {
-            playerCamera.localPosition = Vector3.Lerp(playerCamera.localPosition, new Vector3(0, isCrouching ? crouchingCameraHeight : standingCameraHeight, 0), time / duration);
+            float cameraHeight = Mathf.Lerp(currentCameraHeight, targetCameraHeight, time / duration);
+            playerCamera.localPosition = new Vector3(playerCamera.localPosition.x, cameraHeight, playerCamera.localPosition.z);
+
             characterController.height = Mathf.Lerp(currentHeight, targetHeight, time / duration);
             characterController.center = Vector3.Lerp(currentCenter, targetCenter, time / duration);
 

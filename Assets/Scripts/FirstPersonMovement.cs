@@ -16,10 +16,12 @@ public class FirstPersonMovement : MonoBehaviour
     public Vector3 verticalVelocity = Vector3.zero;
 
     private FirstPersonCrouch crouchComponent;
+    private FirstPersonSlopeSlide slopeSlideComponent;
 
     private void Awake()
     {
         TryGetComponent(out crouchComponent);
+        TryGetComponent(out slopeSlideComponent);
     }
 
     public Vector3 Move(Vector2 currentInput, CharacterController characterController, float deltaTime, bool isJump, bool isSprint = false)
@@ -44,7 +46,14 @@ public class FirstPersonMovement : MonoBehaviour
             verticalVelocity.y += gravity * deltaTime;
         }
 
-        Vector3 velocity = horizontalMovementVelocity + verticalVelocity;
+        Vector3 velocity = Vector3.zero;
+        if (slopeSlideComponent != null && slopeSlideComponent.IsSliding(characterController, out Vector3 slopeNormal))
+        {
+            verticalVelocity = Vector3.zero;
+            horizontalMovementVelocity *= 0.3f;
+            velocity += new Vector3(slopeNormal.x, -slopeNormal.y, slopeNormal.z);
+        }
+        velocity += horizontalMovementVelocity + verticalVelocity;
 
 
         characterController.Move(velocity * deltaTime);

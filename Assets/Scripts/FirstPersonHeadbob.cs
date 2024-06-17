@@ -15,7 +15,7 @@ public class FirstPersonHeadbob : MonoBehaviour
             return;
         }
 
-        float velocityMagnitude = velocity.magnitude;
+        float velocityMagnitude = Vector3.Magnitude(new Vector3(velocity.x, 0f, velocity.z)); ;
 
         if (0.1f < velocityMagnitude)
         {

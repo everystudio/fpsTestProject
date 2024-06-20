@@ -41,9 +41,13 @@ public class FirstPersonMovement : MonoBehaviour
         {
             verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-        if (!characterController.isGrounded)
+        else if (!characterController.isGrounded)
         {
             verticalVelocity.y += gravity * deltaTime;
+        }
+        else
+        {
+            verticalVelocity.y = gravity * 0.1f;
         }
 
         Vector3 velocity = Vector3.zero;

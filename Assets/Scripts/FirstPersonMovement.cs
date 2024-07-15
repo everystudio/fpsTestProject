@@ -49,6 +49,7 @@ public class FirstPersonMovement : MonoBehaviour
         {
             verticalVelocity.y = gravity * 0.1f;
         }
+        // stashテスト
 
         Vector3 velocity = Vector3.zero;
         if (slopeSlideComponent != null && slopeSlideComponent.IsSliding(characterController, out Vector3 slopeNormal))

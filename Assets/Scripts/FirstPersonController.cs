@@ -67,7 +67,10 @@ public class FirstPersonController : MonoBehaviour
                 characterController.height, 1.0f, characterController.center, new Vector3(0, 0.5f, 0));
         }
         TryGetComponent(out headbobComponent);
-        TryGetComponent(out zoomComponent);
+        if (TryGetComponent(out zoomComponent))
+        {
+            zoomComponent.Initialize(playerCamera);
+        }
         TryGetComponent(out interactionComponent);
     }
 

@@ -13,9 +13,13 @@ public class FirstPersonZoom : MonoBehaviour
     private bool isZoomIn = false;
     private CancellationTokenSource cancellationTokenSource;
 
-    private void Start()
+    public void Initialize(Camera camera = null)
     {
-        if (cameraToZoom == null)
+        if (camera != null)
+        {
+            cameraToZoom = camera;
+        }
+        else if (cameraToZoom == null)
         {
             cameraToZoom = GetComponent<Camera>();
         }

@@ -819,8 +819,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314823f7517326247a5d90481e595fc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swingSpeed: 3.5
+  swingSpeed: 200
   swingAmount: 0.025
+  OnFootStep:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &490960617
 MonoBehaviour:
   m_ObjectHideFlags: 0

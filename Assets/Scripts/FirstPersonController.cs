@@ -11,6 +11,7 @@ public class FirstPersonController : MonoBehaviour
     private FirstPersonMovement movementComponent;
     private FirstPersonCrouch crouchComponent;
     private FirstPersonHeadbob headbobComponent;
+    private FirstPersonZoom zoomComponent;
 
     [Header("Look")]
     [SerializeField, Range(1, 10)] private float lookSpeed = 2.0f;
@@ -65,6 +66,7 @@ public class FirstPersonController : MonoBehaviour
                 characterController.height, 1.0f, characterController.center, new Vector3(0, 0.5f, 0));
         }
         TryGetComponent(out headbobComponent);
+        TryGetComponent(out zoomComponent);
     }
 
     private void Update()
@@ -88,6 +90,11 @@ public class FirstPersonController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             crouchComponent?.ToggleCrouch(characterController, 0.5f);
+        }
+
+        if (zoomComponent != null && zoomComponent.ZoomRequest())
+        {
+            zoomComponent.ToggleZoom();
         }
     }
 
